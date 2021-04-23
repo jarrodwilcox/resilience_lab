@@ -2,6 +2,7 @@
 Tools helpful for research and education in developing investment portfolios more resistent to market disruptions
 * These tools support DEVELOPING PRACTICAL INVESTMENT RESILIENCE,
 * authored by Jarrod Wilcox, March 22, 2020.
+The file resilience04222021.pdf is a short slide presentation describing tools available in the Puthon and Jupyter notebook files in this repository.
 
 ## Features
 
