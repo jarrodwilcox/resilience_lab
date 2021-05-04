@@ -206,7 +206,7 @@ def convert_datestring(indates,dformat='%Y-%m-%d'):
 
 # CALCULATE RETURNS
 
-# In[8]:
+# In[7]:
 
 
 def price2return(prices):
@@ -219,7 +219,7 @@ def price2return(prices):
 
 # MODIFY DATA
 
-# In[9]:
+# In[8]:
 
 
 def shrink_means(rtn_df,asset_codes_df,priors_df):
@@ -266,7 +266,7 @@ def shrink_means(rtn_df,asset_codes_df,priors_df):
     return rtn_df
 
 
-# In[10]:
+# In[9]:
 
 
 def modify_switch(rtn_df,modify, asset_codes_df=None,priors_df=None):
@@ -278,7 +278,7 @@ def modify_switch(rtn_df,modify, asset_codes_df=None,priors_df=None):
 
 # COMPOUND RETURNS OVER RETURN INTERVAL
 
-# In[11]:
+# In[10]:
 
 
 def calculate_compound_returns(returns_df,return_interval):
@@ -290,7 +290,7 @@ def calculate_compound_returns(returns_df,return_interval):
 
 # COLLECT FURTHER STATISTICS
 
-# In[12]:
+# In[11]:
 
 
 def overlap_rtn_summary(returns_df,return_interval):
@@ -340,7 +340,7 @@ def overlap_rtn_summary(returns_df,return_interval):
 
 # RESEARCH RECORDKEEPING
 
-# In[13]:
+# In[12]:
 
 
 def print_parameters2(params):
@@ -351,7 +351,7 @@ def print_parameters2(params):
 
 # MATRIX SPLIT
 
-# In[14]:
+# In[13]:
 
 
 def split(idxlist,square):
@@ -367,7 +367,7 @@ def split(idxlist,square):
 
 # PREPARE NEW SQUARE SUB-MATRIX FOR SPLITTING
 
-# In[15]:
+# In[14]:
 
 
 def squareit(task,master):    
@@ -379,7 +379,7 @@ def squareit(task,master):
 
 # TRAVERSE POTENTIAL CLUSTER TREE
 
-# In[16]:
+# In[15]:
 
 
 def traverse(matrix_df):
@@ -411,7 +411,7 @@ def traverse(matrix_df):
 
 # STATISTICS SUMMARY
 
-# In[17]:
+# In[16]:
 
 
 def stat_summary(returns_df,return_interval,verbose=False,namefile=None):
@@ -436,26 +436,32 @@ def stat_summary(returns_df,return_interval,verbose=False,namefile=None):
     print('DISTRIBUTION STATISTICS')
     descript_df=descript_df.reindex(cluster_df.index)
     print(descript_df.to_string(index=False))
+    
     if verbose:
         print(' ')
-        print('CORRELATIONS')
-        corrs_df.index=range(len(returns_df.columns)) #needed to put in same indix set as used for reindexing
-        corrs_df=corrs_df.reindex(cluster_df.index)
+        print('CORRELATIONS')        
+        corrs_df.index=range(len(returns_df.columns)) #needed to put in same index set as used for reindexing        
+        corrs_df=corrs_df.reindex(cluster_df.index)       
         corrs_df=pd.DataFrame(corrs_df,columns=cluster_df['ID'].values)
-        corrs_df.index=corrs_df.columns
+        corrs_df.index=corrs_df.columns 
+        temp1=pd.get_option('display.max_rows')
+        temp2=pd.get_option('display.max_columns')
+        
         pd.set_option('display.max_rows',None)
-        pd.set_option('display.max_columns',None)
+        pd.set_option('display.max_columns',None)        
         print(corrs_df)
-        pd.reset_option("all")
+        pd.set_option('display.max_rows',temp1)
+        pd.set_option('display.max_columns',temp2)         
+        
         print(' ')
-    
+   
 
     return (descript_df,corrs_df,count)
 
 
 # HISTORY ANALYSIS
 
-# In[18]:
+# In[17]:
 
 
 def history_analysis(params,data_df):
@@ -463,7 +469,6 @@ def history_analysis(params,data_df):
     namefile=params.get('namefile')
     sourcefile=params.get('sourcefile')
     sourcetype=params.get('sourcetype')
-    return_interval=params.get('return_interval')
     verbose=params.get('verbose')
     date_format=params.get('date_format')
     datebounds=params.get('datebounds')
@@ -527,7 +532,7 @@ def history_analysis(params,data_df):
 
 # EXTRACT SCENARIO FROM HISTORY
 
-# In[19]:
+# In[18]:
 
 
 def data_extract(returns_df,scenario_name,params):
@@ -547,11 +552,10 @@ def data_extract(returns_df,scenario_name,params):
 
 # SCENARIO ANALYSIS
 
-# In[20]:
+# In[19]:
 
 
 def scenario_extract(params,hist_returns_df,asset_codes_df=None,priors_df=None):
-    return_interval=params.get('return_interval')  
     verbose=params.get('verbose')
     scenario_dict=params.get('scenario_dict') 
     modify=params.get('modify')
@@ -634,7 +638,7 @@ def scenario_extract(params,hist_returns_df,asset_codes_df=None,priors_df=None):
 
 # RETURN MATRIX GENERATOR
 
-# In[21]:
+# In[20]:
 
 
 def return_matrix_generator(params={}):    
@@ -694,28 +698,28 @@ def return_matrix_generator(params={}):
 
 # MAIN: SET PARAMETERS AND CALL RETURN MATRIX GENERATOR
 
-# In[22]:
+# In[21]:
 
 
 params=collections.OrderedDict(
     namefile=None,
-    logfile='run001A.txt',
-    sourcefile='comp_returns.csv',
+    logfile='runxxx.txt',
+    sourcefile='prices.csv',
     prior_file='group_priors.csv',
     codefile='equiv.csv',
     modify='shrink_means',
     predict_file="prediction_01.csv",
     paramfile='params01.json',
-    sourcetype='RETURNS',
-    logging=True,
+    sourcetype='PRICES',
+    logging=False,
     verbose=True,
     
-    date_format='%m/%d/%y',
+    date_format='%Y-%m-%d',
     datebounds=[1980.00,2020.1],
     scenario_dict={
-        'history':{'multiple':1,'datetimebounds':('1/31/88','2/5/21'),'interval':1,'smodify':True,'tdiscount':.03},
-        'breakdown':{'multiple':1,'datetimebounds':('6/30/07','7/31/09'),'interval':1,'smodify':False,'tdiscount':.03}, 
-        '6_month':{'multiple':1,'datetimebounds':('1/31/88','2/5/21'),'interval':6,'smodify':True,'tdiscount':.03},
+        'history':{'multiple':1,'datetimebounds':('1988-1-31','2021-2-5'),'interval':1,'smodify':True,'tdiscount':.03},
+        'breakdown':{'multiple':0,'datetimebounds':('2007-6-30','2009-7-31'),'interval':1,'smodify':False,'tdiscount':.03}, 
+        '6_month':{'multiple':0,'datetimebounds':('1988-1-31','2021-2-5'),'interval':6,'smodify':True,'tdiscount':.03},
         },
     )
 
